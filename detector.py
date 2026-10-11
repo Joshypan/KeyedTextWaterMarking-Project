@@ -49,3 +49,37 @@ class Score:
     def exceeds(self, threshold) -> bool:
         return is_flagged(self.green, self.total, threshold)
 
+# key management
+def generate_key() -> bytes:
+    return secrets.token_bytes(32)
+
+# save/load key to/from file for use in word coloring
+def save_key(path, key: bytes) -> None:
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(key.hex() + "\n")
+
+# load key from file for use in word coloring
+def load_key(path) -> bytes:
+    return bytes.fromhex(Path(path).read_text().strip())
+
+# word coloring to determine if a word is green or red. returns 1 for green, 0 for red. `word` must already be normalized.
+def word_color(word: str, key: bytes) -> int:
+    """1 = green, 0 = red. `word` must already be normalized."""
+    return hmac.digest(key, word.encode("utf-8"), "sha256")[-1] & 1
+
+# score a passage
+def score_text(text: str, key: bytes) -> Score:
+    words = tokenize(text)
+    if not words:
+        raise EmptyInputError("input contains no words")
+    counts = Counter(words)
+    green = sum(c for w, c in counts.items() if word_color(w, key) == 1)
+    return Score(total=len(words), distinct=len(counts), green=green)
+
+# flagging for a given threshold.
+def is_flagged(green: int, total: int, threshold) -> bool:
+    """Flag only when green/total is strictly greater than threshold."""
+    if total <= 0:
+        raise EmptyInputError("total word count must be positive")
+    return Fraction(green, total) > Fraction(str(threshold))
