@@ -4,7 +4,9 @@ Text watermarking embeds a detectable signal in text. In a keyed scheme, the sig
 Collecting documents from TBA
 
 # Commands
-..
+```python3 -m unittest discover -s tests -v```
+Allows you to run full test suite. The key used for testing is ONLY used for testing.
+
 ..
 ..
 
