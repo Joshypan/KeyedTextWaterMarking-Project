@@ -1,17 +1,24 @@
 # KeyedTextWaterMarking-Project
 Text watermarking embeds a detectable signal in text. In a keyed scheme, the signal depends on a secret key. A detector reports a match to that signal. Authorship and policy violations require separate evidence.
 
-# Data Source
-Collecting books from Gutenburg.org, a library where multiple ebooks can be downloaded for free
-Books being used in this project:
-Beowulf: An Anglo-Saxon Epic Poem by J. Lesslie Hall : https://www.gutenberg.org/ebooks/16328
-Dracula by Bram Stoker : https://www.gutenberg.org/ebooks/345
-The Adventures of Sherlock Holmes by Arthur Conan Doyle : https://www.gutenberg.org/ebooks/1661
-The Prince by Niccolò Machiavelli : https://www.gutenberg.org/ebooks/1232
-The Odyssey by Homer : https://www.gutenberg.org/ebooks/1727
-Moby Dick; Or, The Whale by Herman Melville : https://www.gutenberg.org/ebooks/2701
-The Jungle Book by Rudyard Kipling : https://www.gutenberg.org/ebooks/236
-Gulliver's Travels into Several Remote Nations of the World by Jonathan Swift : https://www.gutenberg.org/ebooks/829
+## Data sources
+
+All 315 passages were extracted from 8 source documents from [Project Gutenberg](https://www.gutenberg.org), a library of free ebooks. Project Gutenberg follows US copyright law, and these titles are public domain in the US. Plain-text (UTF-8) files were used, and the Gutenberg header and footer are stripped by `prepare_data.py`.
+
+| Book ID (file name) | Title | Author (translator) | Gutenberg link |
+|---|---|---|---|
+| `beowulf` | Beowulf: An Anglo-Saxon Epic Poem | J. Lesslie Hall (translator) | [16328](https://www.gutenberg.org/ebooks/16328) |
+| `dracula` | Dracula | Bram Stoker | [345](https://www.gutenberg.org/ebooks/345) |
+| `sherlock` | The Adventures of Sherlock Holmes | Arthur Conan Doyle | [1661](https://www.gutenberg.org/ebooks/1661) |
+| `prince` | The Prince | Niccolò Machiavelli | [1232](https://www.gutenberg.org/ebooks/1232) |
+| `odyssey` | The Odyssey (prose translation) | Homer (Samuel Butler, translator) | [1727](https://www.gutenberg.org/ebooks/1727) |
+| `moby_dick` | Moby Dick; Or, The Whale | Herman Melville | [2701](https://www.gutenberg.org/ebooks/2701) |
+| `jungle_book` | The Jungle Book | Rudyard Kipling | [236](https://www.gutenberg.org/ebooks/236) |
+| `gulliver` | Gulliver's Travels into Several Remote Nations of the World | Jonathan Swift | [829](https://www.gutenberg.org/ebooks/829) |
+
+**Set assignment** (from `data/split_info.json`): `[TODO: list which 4 books are calibration and which 4 are evaluation after running prepare_data.py]`
+File name (book ID)	Title	Author	Gutenberg URL
+austen_pride	Pride and Prejudice	Jane Austen	https://www.gutenberg.org/ebooks/1342
 
 # Commands
 ```python3 -m unittest discover -s tests -v```
