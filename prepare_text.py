@@ -6,6 +6,7 @@ Input: data/books/*.txt
 Output: data/passages, manifest.csv, split_info.json
 """
 import argparse
+import csv
 import random
 import re
 import sys
@@ -65,6 +66,16 @@ def candidates(sents: list[str], rng: random.Random) -> dict[str, list[str]]:
                 i += 1
     return out
 
+# list of (book, text) pairs, round-robin across books, up to k total
+def round_robin(pool: dict[str, list[str]], k: int, rng: random.Random):
+    """Take k items spreading across books. pool: book -> list of texts."""
+    pool = {b: rng.sample(t, len(t)) for b, t in pool.items()}
+    chosen, books = [], sorted(pool)
+    while len(chosen) < k and any(pool.values()):
+        for b in books:
+            if pool[b] and len(chosen) < k:
+                chosen.append((b, pool[b].pop()))
+    return chosen
 
 def main():
     ap = argparse.ArgumentParser()
@@ -79,7 +90,7 @@ def main():
     if len(books) < 6:
         sys.exit(f"Need at least 6 books in {args.books} (found {len(books)}); "
                  "aim for 8-12 so each set has several independent sources.")
-
+    #shuffle books and assign to calibration/evaluation sets at random, so that each set has several sources
     shuffled = books[:]
     rng.shuffle(shuffled)
     book_set = {b.stem: ("calibration" if i % 2 == 0 else "evaluation")
@@ -91,14 +102,44 @@ def main():
         for g, texts in c.items():
             cand[book_set[b.stem]][g][b.stem].extend(texts)
 
-    # candidates per book and group, each set needs >= 50 per
-    # group (and 100-199 gets 50 + the watermarking passages on top)
-    for s in WM_PER_SET:
-        print(f"{s}:")
-        for g in GROUPS:
-            per_book = {b: len(t) for b, t in sorted(cand[s][g].items())}
-            print(f"  {g:>8}: total {sum(per_book.values()):4d}  {per_book}")
+    rows, seen = [], set()
+    out = Path(args.out)
+    (out / "passages").mkdir(parents=True, exist_ok=True)
 
+    # helper to add a passage to the output and manifest
+    def add(pid, setname, coll, group, book, text):
+        key = " ".join(tokenize(text))
+        if key in seen:
+            sys.exit(f"duplicate passage {pid}")
+        seen.add(key)
+        (out / "passages" / f"{pid}.txt").write_text(text + "\n", encoding="utf-8")
+        rows.append({"id": pid, "set": setname, "collection": coll,
+                     "length_group": group, "book": book,
+                     "total_words": len(tokenize(text)), "forgery_selected": ""})
+
+    for s, n_wm in WM_PER_SET.items():
+        # watermarking passages first (from the 100-199 pool
+        wm = round_robin(cand[s]["100-199"], n_wm, rng)
+        if len(wm) < n_wm:
+            sys.exit(f"{s}: only {len(wm)} watermarking candidates; add books")
+        for i, (b, t) in enumerate(wm, 1):
+            add(f"{s[:3]}_wm_{i:02d}", s, "watermark", "100-199", b, t)
+            cand[s]["100-199"][b] = [x for x in cand[s]["100-199"][b] if x != t]
+        for g in GROUPS:
+            got = round_robin(cand[s][g], PER_GROUP_PER_SET, rng)
+            if len(got) < PER_GROUP_PER_SET:
+                sys.exit(f"{s}/{g}: only {len(got)} of {PER_GROUP_PER_SET} "
+                         "unmarked passages; add more or longer books")
+            for i, (b, t) in enumerate(got, 1):
+                add(f"{s[:3]}_un_{g}_{i:02d}", s, "unmarked", g, b, t)
+
+    with open(out / "manifest.csv", "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+
+    # count how many passages were written
+    print(f"wrote {len(rows)} passages to {out / 'passages'}")
 
 if __name__ == "__main__":
     main()

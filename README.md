@@ -24,6 +24,9 @@ austen_pride	Pride and Prejudice	Jane Austen	https://www.gutenberg.org/ebooks/13
 ```python3 -m unittest discover -s tests -v```
 Allows you to run full test suite. The key used for testing is ONLY used for testing.
 
+```python3 prepare_text.py ```
+Alloes you to normallize the data (books in this case) into passages
+
 ..
 ..
 
