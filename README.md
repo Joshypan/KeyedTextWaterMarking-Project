@@ -25,15 +25,12 @@ austen_pride	Pride and Prejudice	Jane Austen	https://www.gutenberg.org/ebooks/13
 Allows you to run full test suite. The key used for testing is ONLY used for testing.
 
 ```python3 prepare_text.py ```
-Alloes you to normallize the data (books in this case) into passages
-
-..
-..
-
-# Resources
+Allows you to normallize the data (books in this case) into passages
 
 # Owner
 Joshua Panchana Cedeno
+    During this first milestone, my main issue stemmed from being able to find passages. I was able to solve this issue using [gutenberg.org](https://www.gutenberg.org) and downloading .txt files of the books, parsing the files to create the passages I need and mark them. 
+    I utilized Github as my source control to and to create issues for the required tasks. 
 
 # Milestone 
 1

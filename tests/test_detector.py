@@ -95,10 +95,10 @@ class Scoring(unittest.TestCase):
     # test that the exceeds method returns True if the fraction of green words exceeds the given threshold
     def test_threshold_strict(self):
         self.assertTrue(is_flagged(65, 100, 0.60))
-        self.assertFalse(is_flagged(60, 100, 0.60))   # equal -> unflagged
+        self.assertFalse(is_flagged(60, 100, 0.60))
         self.assertFalse(is_flagged(58, 100, 0.60))
         self.assertTrue(is_flagged(61, 100, 0.60))
-        self.assertFalse(is_flagged(11, 20, 0.55))    # 0.55 exactly
+        self.assertFalse(is_flagged(11, 20, 0.55))
         self.assertTrue(is_flagged(12, 20, 0.55))
 
     # test that the exceeds method returns True if the fraction of green words exceeds the given threshold

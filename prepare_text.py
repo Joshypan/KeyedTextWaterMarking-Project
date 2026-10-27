@@ -35,7 +35,7 @@ def load_sentences(path: Path) -> list[str]:
     sents = []
     for para in re.split(r"\n\s*\n", raw):
         para = " ".join(para.split())
-        if len(tokenize(para)) < 12:      # headings, page furniture, tiny lines
+        if len(tokenize(para)) < 12:
             continue
         if para.isupper():
             continue
