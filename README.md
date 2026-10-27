@@ -3,29 +3,31 @@ Text watermarking embeds a detectable signal in text. In a keyed scheme, the sig
 
 ## Data sources
 
-All 315 passages were extracted from 8 source documents from [Project Gutenberg](https://www.gutenberg.org), a library of free ebooks. Project Gutenberg follows US copyright law, and these titles are public domain in the US. Plain-text (UTF-8) files were used, and the Gutenberg header and footer are stripped by `prepare_data.py`.
+All 315 passages were extracted from 8 source documents from [Project Gutenberg](https://www.gutenberg.org), a library of free ebooks. Project Gutenberg follows US copyright law, and these titles are public domain in the US. Plain-text (UTF-8) files were used. `prepare_text.py` strips the Gutenberg header and footer, footnotes and footnote numbers, transcriber's notes, headings and all-caps lines. The book files themselves are not committed (`data/books/` is git-ignored); download them from the links below.
 
-| Book ID (file name) | Title | Author (translator) | Gutenberg link |
-|---|---|---|---|
-| `beowulf` | Beowulf: An Anglo-Saxon Epic Poem | J. Lesslie Hall (translator) | [16328](https://www.gutenberg.org/ebooks/16328) |
-| `dracula` | Dracula | Bram Stoker | [345](https://www.gutenberg.org/ebooks/345) |
-| `sherlock` | The Adventures of Sherlock Holmes | Arthur Conan Doyle | [1661](https://www.gutenberg.org/ebooks/1661) |
-| `prince` | The Prince | Niccolò Machiavelli | [1232](https://www.gutenberg.org/ebooks/1232) |
-| `odyssey` | The Odyssey (prose translation) | Homer (Samuel Butler, translator) | [1727](https://www.gutenberg.org/ebooks/1727) |
-| `moby_dick` | Moby Dick; Or, The Whale | Herman Melville | [2701](https://www.gutenberg.org/ebooks/2701) |
-| `jungle_book` | The Jungle Book | Rudyard Kipling | [236](https://www.gutenberg.org/ebooks/236) |
-| `gulliver` | Gulliver's Travels into Several Remote Nations of the World | Jonathan Swift | [829](https://www.gutenberg.org/ebooks/829) |
+| Book ID (file name) | Title | Author (translator) | Gutenberg link | Set | Passages |
+|---|---|---|---|---|---|
+| `austen` | Pride and Prejudice | Jane Austen | [1342](https://www.gutenberg.org/ebooks/1342) | calibration | 41 |
+| `dracula` | Dracula | Bram Stoker | [345](https://www.gutenberg.org/ebooks/345) | calibration | 40 |
+| `moby_dick` | Moby Dick; Or, The Whale | Herman Melville | [2701](https://www.gutenberg.org/ebooks/2701) | calibration | 37 |
+| `prince` | The Prince | Niccolò Machiavelli | [1232](https://www.gutenberg.org/ebooks/1232) | calibration | 37 |
+| `gulliver` | Gulliver's Travels into Several Remote Nations of the World | Jonathan Swift | [829](https://www.gutenberg.org/ebooks/829) | evaluation | 42 |
+| `jungle_book` | The Jungle Book | Rudyard Kipling | [236](https://www.gutenberg.org/ebooks/236) | evaluation | 42 |
+| `odyssey` | The Odyssey (prose translation) | Homer (Samuel Butler, translator) | [1727](https://www.gutenberg.org/ebooks/1727) | evaluation | 38 |
+| `sherlock` | The Adventures of Sherlock Holmes | Arthur Conan Doyle | [1661](https://www.gutenberg.org/ebooks/1661) | evaluation | 38 |
 
-**Set assignment** (from `data/split_info.json`): `[TODO: list which 4 books are calibration and which 4 are evaluation after running prepare_data.py]`
-File name (book ID)	Title	Author	Gutenberg URL
-austen_pride	Pride and Prejudice	Jane Austen	https://www.gutenberg.org/ebooks/1342
+**Set assignment:** 4 books per set. The book files are shuffled with `random.Random(20261009)` and assigned to calibration and evaluation. Each set has 150 unmarked passages (50 per length group: 30–99, 100–199, 200–400 words) and its watermarking passages (5 calibration, 10 evaluation).
+
+**Query-access forgery passages:** `eva_wm_01`, `eva_wm_03`, `eva_wm_06`, `eva_wm_07`, `eva_wm_10`, chosen with `random.Random(7).sample(...)` from the 10 evaluation watermarking passages during data prep, before any detector score existed.
+
+Each passage's book, set, length group, total and distinct word counts, and forgery label are in `data/manifest.csv`. The method and counts are in `data/split_info.json`.
 
 # Commands
 ```python3 -m unittest discover -s tests -v```
 Allows you to run full test suite. The key used for testing is ONLY used for testing.
 
 ```python3 prepare_text.py ```
-Allows you to normallize the data (books in this case) into passages
+Allows you to normalize the data (books in this case) into passages
 
 # Owner
 Joshua Panchana Cedeno
