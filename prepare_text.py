@@ -7,6 +7,7 @@ Output: data/passages, manifest.csv, split_info.json
 """
 import argparse
 import csv
+import json
 import random
 import re
 import sys
@@ -22,6 +23,10 @@ WM_PER_SET = {"calibration": 5, "evaluation": 10}
 START = re.compile(r"\*\*\* ?START OF (?:THE|THIS) PROJECT GUTENBERG.*?\*\*\*", re.I | re.S)
 END = re.compile(r"\*\*\* ?END OF (?:THE|THIS) PROJECT GUTENBERG", re.I)
 SENT_SPLIT = re.compile(r"(?<=[.!?])[\"'”’)]*\s+")
+FOOTNOTE_BODY = re.compile(r"\[\d+\]")         # if a paragraph starts with [12], it is a footnote
+FOOTNOTE_MARK = re.compile(r"\s*\[\d+\]")      # inline references
+FOOTNOTE_NUM = re.compile(r"(?<=[a-z])\d+\b")  # number stuck to a word, like "cloisters11"
+TRANSCRIBER = re.compile(r"Gutenberg|etext", re.I)  # transcriber's notes about the file
 
 # load sentences from a book, removing Gutenberg header+footer, short lines, and all-caps lines. returns a list of sentences.
 def load_sentences(path: Path) -> list[str]:
@@ -35,6 +40,10 @@ def load_sentences(path: Path) -> list[str]:
     sents = []
     for para in re.split(r"\n\s*\n", raw):
         para = " ".join(para.split())
+        if FOOTNOTE_BODY.match(para) or TRANSCRIBER.search(para):
+            continue
+        para = FOOTNOTE_MARK.sub("", para)
+        para = FOOTNOTE_NUM.sub("", para)
         if len(tokenize(para)) < 12:
             continue
         if para.isupper():
@@ -115,7 +124,8 @@ def main():
         (out / "passages" / f"{pid}.txt").write_text(text + "\n", encoding="utf-8")
         rows.append({"id": pid, "set": setname, "collection": coll,
                      "length_group": group, "book": book,
-                     "total_words": len(tokenize(text)), "forgery_selected": ""})
+                     "total_words": len(tokenize(text)),
+                     "distinct_words": len(set(tokenize(text))), "forgery_selected": ""})
 
     for s, n_wm in WM_PER_SET.items():
         # watermarking passages first (from the 100-199 pool
@@ -133,13 +143,31 @@ def main():
             for i, (b, t) in enumerate(got, 1):
                 add(f"{s[:3]}_un_{g}_{i:02d}", s, "unmarked", g, b, t)
 
+    # forgery selection
+    eval_wm = sorted(r["id"] for r in rows if r["set"] == "evaluation"
+                     and r["collection"] == "watermark")
+    picked = set(random.Random(args.forgery_seed).sample(eval_wm, 5))
+    for r in rows:
+        if r["id"] in picked:
+            r["forgery_selected"] = "yes"
+
     with open(out / "manifest.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
         w.writerows(rows)
 
-    # count how many passages were written
-    print(f"wrote {len(rows)} passages to {out / 'passages'}")
+    info = {
+        "books": {b.stem: book_set[b.stem] for b in books},
+        "book_to_set_method": f"files shuffled with random.Random({args.seed}), alternating calibration/evaluation",
+        "forgery_selection_method": f"random.Random({args.forgery_seed}).sample(sorted evaluation watermark ids, 5), run at data prep time",
+        "forgery_selected": sorted(picked),
+        "counts": {f"{s}/{c}": sum(r['set'] == s and r['collection'] == c for r in rows)
+                   for s in WM_PER_SET for c in ("unmarked", "watermark")},
+    }
+    # creates split_info.json with the book assignments and counts of passages per collection
+    (out / "split_info.json").write_text(json.dumps(info, indent=2))
+    print(json.dumps(info["counts"], indent=2))
+    print("forgery-selected:", ", ".join(sorted(picked)))
 
 if __name__ == "__main__":
     main()
