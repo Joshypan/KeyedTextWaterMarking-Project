@@ -1,9 +1,14 @@
 id,set,collection,length_group,book,version,total_words,distinct_words,green,fraction,changed_words
 cal_wm_01,calibration,watermark,100-199,austen,original,149,101,68,0.4564,0
+cal_wm_01,calibration,watermark,100-199,austen,final,142,103,109,0.7676,82
 cal_wm_02,calibration,watermark,100-199,dracula,original,174,106,73,0.4195,0
+cal_wm_02,calibration,watermark,100-199,dracula,final,151,101,121,0.8013,123
 cal_wm_03,calibration,watermark,100-199,moby_dick,original,180,112,76,0.4222,0
+cal_wm_03,calibration,watermark,100-199,moby_dick,final,151,97,118,0.7815,115
 cal_wm_04,calibration,watermark,100-199,prince,original,198,124,86,0.4343,0
+cal_wm_04,calibration,watermark,100-199,prince,final,185,122,130,0.7027,117
 cal_wm_05,calibration,watermark,100-199,austen,original,132,97,56,0.4242,0
+cal_wm_05,calibration,watermark,100-199,austen,final,128,97,90,0.7031,53
 cal_un_30-99_01,calibration,unmarked,30-99,austen,original,93,71,44,0.4731,0
 cal_un_30-99_02,calibration,unmarked,30-99,dracula,original,88,69,34,0.3864,0
 cal_un_30-99_03,calibration,unmarked,30-99,moby_dick,original,66,53,32,0.4848,0

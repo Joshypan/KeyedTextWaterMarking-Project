@@ -1,12 +1,13 @@
 {
   "command": "calibrate",
-  "ran_at": "2026-10-29T17:31:25+00:00",
+  "ran_at": "2026-10-30T20:56:01+00:00",
   "key_file": "keys/key.hex",
   "detector_sha256": "7f80ae6df42acacc",
   "thresholds": [
     "0.55",
     "0.60",
-    "0.65"
+    "0.65",
+    "0.70"
   ],
-  "final_outputs_found": 0
+  "final_outputs_found": 5
 }
