@@ -44,9 +44,6 @@ Scores one file while you edit it and lists its red words.
 ```python3 evaluate.py fix --key keys/key.hex --threshold 0.65 --target 0.75 --stop "stop at the target or after 30 minutes"```
 Freezes the key file, word rules, threshold, watermarking target and stopping rule in `results/settings.json`. Replace the example numbers and rule with your own choices. It cannot be overwritten.
 
-```python3 evaluate.py review-sheet --set evaluation```
-Writes a review packet (original and edited text, no scores) and a blank `quality_reviews.csv` to `review/evaluation/`.
-
 ```python3 evaluate.py evaluate --key keys/key.hex```
 Scores the evaluation set with the frozen settings and reports the false-positive rate, detection rate and usable success rate.
 

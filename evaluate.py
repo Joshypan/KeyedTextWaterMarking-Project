@@ -6,7 +6,6 @@ import csv
 import difflib
 import hashlib
 import json
-import math
 import sys
 from datetime import datetime, timezone
 from fractions import Fraction
@@ -63,15 +62,6 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         w.writeheader()
         w.writerows(rows)
 
-def wilson(k: int, n: int) -> tuple[float, float]:
-    """Approximate 95% interval for a rate of k out of n."""
-    if n == 0:
-        return (0.0, 1.0)
-    z, p = 1.96, k / n
-    mid = (p + z * z / (2 * n)) / (1 + z * z / n)
-    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
-    return (max(0.0, mid - half), min(1.0, mid + half))
-
 # scoring
 def score_one(text: str, key: bytes) -> dict:
     s = score_text(text, key)
@@ -114,8 +104,6 @@ def cmd_calibrate(args):
                "unmarked_tested": len(unmarked),
                "unflagged_outputs": sum(not flagged(r, t) for r in outputs),
                "outputs_tested": len(outputs)}
-        for g in GROUPS:
-            row[f"flagged_{g}"] = sum(flagged(r, t) for r in unmarked if r["length_group"] == g)
         table.append(row)
     write_csv(RESULTS / "calibration_thresholds.csv", table)
 
@@ -124,14 +112,11 @@ def cmd_calibrate(args):
            "thresholds": args.thresholds, "final_outputs_found": len(outputs)}
     (RESULTS / "calibration_run.json").write_text(json.dumps(run, indent=2) + "\n")
 
-    top = max(unmarked, key=lambda r: float(r["fraction"]))
     print(f"scored {len(unmarked)} unmarked and {len(outputs)} watermarked calibration passages")
-    print(f"highest unmarked fraction: {top['fraction']} ({top['id']}, {top['total_words']} words)")
-    print(f"{'threshold':>9}  flagged unmarked  unflagged outputs  by group (30-99/100-199/200-400)")
+    print(f"{'threshold':>9}  flagged unmarked  unflagged outputs")
     for r in table:
         print(f"{r['threshold']:>9}  {r['flagged_unmarked']:>7} / {r['unmarked_tested']:<6}"
-              f"  {r['unflagged_outputs']:>7} / {r['outputs_tested']:<7}"
-              f"  {r['flagged_30-99']}/{r['flagged_100-199']}/{r['flagged_200-400']}")
+              f"  {r['unflagged_outputs']:>7} / {r['outputs_tested']}")
     if not outputs:
         print("no data/watermarked/<id>/final.txt yet: practice watermarking (step 4), then re-run")
 
@@ -160,30 +145,6 @@ def cmd_fix(args):
     SETTINGS.write_text(json.dumps(settings, indent=2) + "\n")
     print(f"froze settings in {SETTINGS}:")
     print(json.dumps(settings, indent=2))
-
-def cmd_review_sheet(args):
-    """Blind review packet: original and edited text only, no scores."""
-    out = REVIEW / args.set
-    out.mkdir(parents=True, exist_ok=True)
-    ids = [m["id"] for m in load_manifest()
-           if m["set"] == args.set and m["collection"] == "watermark"]
-    ready = [i for i in ids if final_path(i).exists()]
-    if not ready:
-        sys.exit(f"no data/watermarked/<id>/final.txt yet for the {args.set} set")
-    for pid in ready:
-        (out / f"{pid}.md").write_text(
-            f"# {pid}\n\n## Original\n\n{read_passage(pid).strip()}\n\n"
-            f"## Edited\n\n{final_path(pid).read_text(encoding='utf-8').strip()}\n",
-            encoding="utf-8")
-    sheet = out / "quality_reviews.csv"
-    if not sheet.exists():
-        write_csv(sheet, [{"id": i, "reviewer": "", "meaning_preserved": "",
-                           "readable": "", "notes": ""} for i in ready])
-    missing = sorted(set(ids) - set(ready))
-    print(f"wrote {len(ready)} review pages to {out}/ and the sheet {sheet}")
-    if missing:
-        print("no final.txt yet for:", ", ".join(missing))
-    print("Give the reviewer only this folder. Answer yes/no for meaning_preserved and readable.")
 
 def load_reviews(setname: str) -> dict[str, dict]:
     sheet = REVIEW / setname / "quality_reviews.csv"
@@ -240,7 +201,6 @@ def cmd_evaluate(args):
         "ran_at": now(),
         "settings": settings,
         "false_positive_rate": {"flagged": n_fp, "tested": n, "rate": n_fp / n,
-                                "approx_95_interval": wilson(n_fp, n),
                                 "rule_of_three_upper": 3 / n if n_fp == 0 else None},
         "by_length_group": {g: {"flagged": sum(r["flagged"] == "yes" for r in unmarked
                                                if r["length_group"] == g),
@@ -265,8 +225,8 @@ def cmd_evaluate(args):
     write_csv(out / "scores.csv", rows)
     (out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
 
-    lo, hi = summary["false_positive_rate"]["approx_95_interval"]
-    print(f"false positives: {n_fp}/{n} = {n_fp / n:.3f} (approx 95%: {lo:.3f}-{hi:.3f})")
+    bound = f" (95% upper bound about 3/{n} = {3 / n:.3f})" if n_fp == 0 else ""
+    print(f"false positives: {n_fp}/{n} = {n_fp / n:.3f}{bound}")
     for g, c in summary["by_length_group"].items():
         print(f"  {g:>8}: {c['flagged']}/{c['tested']} flagged")
     print(f"detection rate: {n_det}/{len(wm_ids)}   usable success: {n_use}/{len(wm_ids)}   "
@@ -306,10 +266,6 @@ def main():
     p.add_argument("--target", required=True, help="green fraction the editor aims for")
     p.add_argument("--stop", required=True, help="stopping rule, in words")
     p.set_defaults(func=cmd_fix)
-
-    p = sub.add_parser("review-sheet", help="blind review packet for the quality check")
-    p.add_argument("--set", choices=["calibration", "evaluation"], default="evaluation")
-    p.set_defaults(func=cmd_review_sheet)
 
     p = sub.add_parser("evaluate", help="score the evaluation set with frozen settings")
     p.add_argument("--key", required=True)
