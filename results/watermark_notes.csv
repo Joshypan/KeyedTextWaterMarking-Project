@@ -1,0 +1,6 @@
+id,versions,final_version,target,stopping_rule,before,after,reached_target,original_words,changed_words,notes
+cal_wm_01,v01 v02 v03,v03,0.75,stop once the green fraction is at least the target,0.4564,0.7676,yes,149,82,v02 was a first manual attempt(score went down); v03 rewrote most sentences
+cal_wm_02,v01 v02,v02,0.75,stop once the green fraction is at least the target,0.4195,0.8013,yes,174,123,
+cal_wm_03,v01 v02,v02,0.75,stop once the green fraction is at least the target,0.4222,0.7815,yes,180,115,
+cal_wm_04,v01 v02 v03,v03,0.70,stop once the green fraction is at least the target,0.4343,0.7027,yes,198,117,kept the original spelling Ætolians (this is green). v02 reached 0.75 but failed the quality check. So target lowered to 0.70 and v03 redone from the original
+cal_wm_05,v01 v02 v03,v03,0.70,stop once the green fraction is at least the target,0.4242,0.7031,yes,132,53,"passage is from the edition's critical preface, not Austen's text. Stray italic underscores kept; v02 reached 0.75 but failed the quality check. Target lowered to 0.70 and v03 redone from the original"
