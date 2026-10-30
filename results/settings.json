@@ -1,0 +1,10 @@
+{
+  "fixed_at": "2026-10-30T20:58:20+00:00",
+  "key_file": "keys/key.hex",
+  "detector_sha256": "7f80ae6df42acacc",
+  "word_rules": "detector.tokenize: remove Unicode Cf characters, NFKC, curly apostrophes to ', words = letters/digits with inner apostrophes, casefold",
+  "threshold": "0.65",
+  "flag_rule": "flag when green/total is strictly greater than threshold",
+  "watermark_target": "0.70",
+  "stopping_rule": "Stop as soon as the green fraction reaches 0.70, or when no further edit can raise it without changing the meaning."
+}
