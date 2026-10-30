@@ -1,0 +1,139 @@
+{
+  "ran_at": "2026-10-30T22:12:54+00:00",
+  "settings": {
+    "fixed_at": "2026-10-30T20:58:20+00:00",
+    "key_file": "keys/key.hex",
+    "detector_sha256": "7f80ae6df42acacc",
+    "word_rules": "detector.tokenize: remove Unicode Cf characters, NFKC, curly apostrophes to ', words = letters/digits with inner apostrophes, casefold",
+    "threshold": "0.65",
+    "flag_rule": "flag when green/total is strictly greater than threshold",
+    "watermark_target": "0.70",
+    "stopping_rule": "Stop as soon as the green fraction reaches 0.70, or when no further edit can raise it without changing the meaning."
+  },
+  "false_positive_rate": {
+    "flagged": 0,
+    "tested": 150,
+    "rate": 0.0,
+    "rule_of_three_upper": 0.02
+  },
+  "by_length_group": {
+    "30-99": {
+      "flagged": 0,
+      "tested": 50
+    },
+    "100-199": {
+      "flagged": 0,
+      "tested": 50
+    },
+    "200-400": {
+      "flagged": 0,
+      "tested": 50
+    }
+  },
+  "detection_rate": {
+    "flagged": 10,
+    "attempts": 10
+  },
+  "usable_success_rate": {
+    "flagged_and_usable": 9,
+    "attempts": 10
+  },
+  "reached_target": {
+    "count": 10,
+    "attempts": 10
+  },
+  "missing_outputs": [],
+  "unreviewed_outputs": [],
+  "per_passage": [
+    {
+      "id": "eva_wm_01",
+      "forgery_selected": true,
+      "before": "0.3487",
+      "after": "0.7076",
+      "changed_words": 144,
+      "flagged_after": "yes",
+      "usable": "yes"
+    },
+    {
+      "id": "eva_wm_02",
+      "forgery_selected": false,
+      "before": "0.4545",
+      "after": "0.7297",
+      "changed_words": 55,
+      "flagged_after": "yes",
+      "usable": "yes"
+    },
+    {
+      "id": "eva_wm_03",
+      "forgery_selected": true,
+      "before": "0.4885",
+      "after": "0.7040",
+      "changed_words": 70,
+      "flagged_after": "yes",
+      "usable": "yes"
+    },
+    {
+      "id": "eva_wm_04",
+      "forgery_selected": false,
+      "before": "0.3846",
+      "after": "0.7500",
+      "changed_words": 64,
+      "flagged_after": "yes",
+      "usable": "yes"
+    },
+    {
+      "id": "eva_wm_05",
+      "forgery_selected": false,
+      "before": "0.4721",
+      "after": "0.7617",
+      "changed_words": 96,
+      "flagged_after": "yes",
+      "usable": "yes"
+    },
+    {
+      "id": "eva_wm_06",
+      "forgery_selected": true,
+      "before": "0.3563",
+      "after": "0.7020",
+      "changed_words": 90,
+      "flagged_after": "yes",
+      "usable": "no"
+    },
+    {
+      "id": "eva_wm_07",
+      "forgery_selected": true,
+      "before": "0.4419",
+      "after": "0.7014",
+      "changed_words": 93,
+      "flagged_after": "yes",
+      "usable": "yes"
+    },
+    {
+      "id": "eva_wm_08",
+      "forgery_selected": false,
+      "before": "0.4293",
+      "after": "0.7041",
+      "changed_words": 86,
+      "flagged_after": "yes",
+      "usable": "yes"
+    },
+    {
+      "id": "eva_wm_09",
+      "forgery_selected": false,
+      "before": "0.3779",
+      "after": "0.7055",
+      "changed_words": 91,
+      "flagged_after": "yes",
+      "usable": "yes"
+    },
+    {
+      "id": "eva_wm_10",
+      "forgery_selected": true,
+      "before": "0.3922",
+      "after": "0.7099",
+      "changed_words": 73,
+      "flagged_after": "yes",
+      "usable": "yes"
+    }
+  ]
+}
