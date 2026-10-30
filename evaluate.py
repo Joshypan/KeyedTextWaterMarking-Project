@@ -135,12 +135,16 @@ def cmd_calibrate(args):
     if not outputs:
         print("no data/watermarked/<id>/final.txt yet: practice watermarking (step 4), then re-run")
 
+# freeze the settings before evaluation
 def cmd_fix(args):
     if SETTINGS.exists():
         sys.exit(f"{SETTINGS} already exists: the settings are frozen. If you change the "
                  "design after evaluation, keep the old results and report the new run separately.")
     key = load_key(args.key)
-    Fraction(args.threshold), Fraction(args.target)  # fail early on a typo
+    try:
+        Fraction(args.threshold), Fraction(args.target)
+    except ValueError:
+        sys.exit("--threshold and --target must be numbers, e.g. 0.65")
     settings = {
         "fixed_at": now(),
         "key_file": args.key,
@@ -164,6 +168,8 @@ def cmd_review_sheet(args):
     ids = [m["id"] for m in load_manifest()
            if m["set"] == args.set and m["collection"] == "watermark"]
     ready = [i for i in ids if final_path(i).exists()]
+    if not ready:
+        sys.exit(f"no data/watermarked/<id>/final.txt yet for the {args.set} set")
     for pid in ready:
         (out / f"{pid}.md").write_text(
             f"# {pid}\n\n## Original\n\n{read_passage(pid).strip()}\n\n"
@@ -276,6 +282,8 @@ def cmd_evaluate(args):
 
 # score one file while editing, and list its red words
 def cmd_score(args):
+    if not Path(args.file).exists():
+        sys.exit(f"{args.file} does not exist; save your edited version there first")
     key = load_key(args.key)
     text = Path(args.file).read_text(encoding="utf-8")
     s = score_text(text, key)

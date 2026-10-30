@@ -29,6 +29,27 @@ Allows you to run full test suite. The key used for testing is ONLY used for tes
 ```python3 prepare_text.py ```
 Allows you to normalize the data (books in this case) into passages
 
+```python3 key.py```
+Creates the one random key in `keys/key.hex`
+
+```python3 evaluate.py calibrate --key keys/key.hex```
+Scores the 150 unmarked calibration passages and any finished calibration watermarking outputs, and compares the thresholds 0.55, 0.60 and 0.65.
+
+```mkdir -p data/watermarked/cal_wm_01 && cp data/passages/cal_wm_01.txt data/watermarked/cal_wm_01/v01.txt```
+Starts a watermarking attempt, copy the original into its own folder, then edit `v01.txt` by hand. Save each later version as `v02.txt`, `v03.txt`,etc. Then, copy the chosen one to `final.txt`.
+
+```python3 evaluate.py score data/watermarked/cal_wm_01/v01.txt --key keys/key.hex```
+Scores one file while you edit it and lists its red words.
+
+```python3 evaluate.py fix --key keys/key.hex --threshold 0.65 --target 0.75 --stop "stop at the target or after 30 minutes"```
+Freezes the key file, word rules, threshold, watermarking target and stopping rule in `results/settings.json`. Replace the example numbers and rule with your own choices. It cannot be overwritten.
+
+```python3 evaluate.py review-sheet --set evaluation```
+Writes a review packet (original and edited text, no scores) and a blank `quality_reviews.csv` to `review/evaluation/`.
+
+```python3 evaluate.py evaluate --key keys/key.hex```
+Scores the evaluation set with the frozen settings and reports the false-positive rate, detection rate and usable success rate.
+
 # Owner
 Joshua Panchana Cedeno
     During this first milestone, my main issue stemmed from being able to find passages. I was able to solve this issue using [gutenberg.org](https://www.gutenberg.org) and downloading .txt files of the books, parsing the files to create the passages I need and mark them. 
