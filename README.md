@@ -75,6 +75,7 @@ Joshua Panchana Cedeno
 During this first milestone, my main issue stemmed from being able to find passages. I was able to solve this issue using [gutenberg.org](https://www.gutenberg.org) and downloading .txt files of the books, parsing the files to create the passages I need and mark them. I was able to implement an organized way of breaking down the txt files into passages and storing their watermarked versions. The watermarked versions are in the `data/watermarked` directory, the quality reviews are in the `review` directory, and the calibration and evaluation results are in the `results` directory. Read the report for more information on the flow of watermarking and the final evaluation in `report.md`.
 
 Contributions - Claude
+
 Claude aided in the generation of detector.py, evaluate.py and prepare_text.py. When creating prepare_text.py, I started by generating my own pseudocode to understand the layout of the program. Occasionally, there would be gaps I could not fill that caused my file to not parse the text correctly or crash. evaluate.py had the same start, but Claude generated suggestions for the code logic behind the cmd_x functions. Additionally, at my request, Claude made the quality reviews after I watermarked the passages.
 
 # Milestone 
