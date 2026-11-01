@@ -38,8 +38,7 @@ My own first attempt at `cal_wm_01` lowered its score from 68 to 67 green words,
 | `cal_wm_04` | prince | 0.70 | 0.434 | 0.703 | 117 / 198 | yes | yes |
 | `cal_wm_05` | austen | 0.70 | 0.424 | 0.703 | 53 / 132 | yes | yes |
 
-At my first target of 0.75 all five passages reached it, but two failed the quality check. `cal_wm_04` had ungrammatical phrases, and `cal_wm_05` changed the meaning of a sentence about Persuasion. Using only these calibration results, I lowered the target to 0.70, and redid both from their originals. They then passed, and `cal_wm_04` needed 117 changed words instead of 161. Practice edits changed 40–71% of the words. I measured effort by changed words and did not record time.
-
+The meaning and readability were judged by Claude as the reviewer, the procedure is described in Section 4. At my first target of 0.75 all five passages reached it, but two failed the quality check. `cal_wm_04` had ungrammatical phrases, and `cal_wm_05` changed the meaning of a sentence about Persuasion. Using only these calibration results, I lowered the target to 0.70, and redid both from their originals. They then passed, and `cal_wm_04` needed 117 changed words instead of 161. Practice edits changed 40–71% of the words. I measured effort by changed words and did not record time.
 
 | Threshold | Flagged unmarked (of 150) | Unflagged practice outputs (of 5) |
 |---|---|---|
@@ -80,7 +79,9 @@ Every attempt reached the target, but only through heavy rewriting: 45–74% of 
 
 I align the normalized words of the original and edited versions with Python's `difflib.SequenceMatcher`. Each replaced, deleted or inserted run counts as its longer side, so a one-for-one swap counts 1 and replacing one word with three counts 3.
 
-In the quality check, I compared each original with its edited version and answered two questions: is the main meaning preserved, and is the prose readable? Both had to be "yes" for the output to count as usable. The project asks for a teammate who did not edit the passage and who sees no scores. My reviewer, Claude, did not see the edits nor scores, so the review was not biased. That knowledge can influence the review because an editor tends to read their own changes, fills in unclear wording from memory, and knows which outputs reached the target, so an independent reader might have rejected more outputs.
+The project asks for a teammate who did not edit the passage. Because I worked alone, I used Claude as the reviewer. I wrote all of the edits myself, but having myself review my edits would have removed the independence factor. For each passage, I gave Claude the original and the edited version in separate session keeping these in mind: is the main meaning preserved, and is the prose readable? Both answers had to be “yes” for the output to count as usable. Claude was not shown the detector scores, the decisions, the target, or whether the target was reached, and it did not see my edit history or the word lists. What it did see was both full texts, since it needs them to compare. I recorded its answers before looking at the scores.
+
+This review is less independent compared to a teammate. Claude was told the task was a watermarking check, which may make it read for changed words and either overlook small meaning shifts or be tolerant of awkward phrasing. I also chose the prompt, and I read the answers knowing which edits I had worked hardest on. A human reader unfamiliar with the project might have rejected more outputs. But I did not disagree with any of Claude’s judgments.
 
 | Length group | Flagged / tested | Mean green | Highest |
 |---|---|---|---|
@@ -132,4 +133,4 @@ Under my frozen settings the detector flagged 0 of 150 unmarked passages and all
 
 ## Contribution statement
 
-I designed the project, collected the books, and wrote and ran the scripts, with help from Claude on `prepare_text.py` (I wrote the pseudocode and Claude helped fill gaps) and `evaluate.py`. At my request, did the quality reviews, without reviewing the original text, which I edited.
+I designed the project, collected the books, and wrote and ran the scripts, with help from Claude on `prepare_text.py` (I wrote the pseudocode and Claude helped fill gaps) and `evaluate.py`. Claude also acted as the quality reviewer: at my request, it compared each original with my edited version and answered the meaning and readability questions without seeing scores or detector decisions. 
