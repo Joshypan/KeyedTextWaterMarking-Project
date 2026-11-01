@@ -8,7 +8,7 @@ My detector normalizes text by removing invisible format characters (Unicode Cf)
 
 ## 2. Data
 
-I collected 315 distinct passages from 8 public-domain Project Gutenberg books. `prepare_text.py` strips the Gutenberg header and footer, footnotes and transcriber's notes, then cuts nonoverlapping runs of whole sentences into three length groups.
+I collected 315 distinct passages from 8 public-domain Project Gutenberg books. `prepare_text.py` strips the Gutenberg header and footer, footnotes and transcriber's notes, then cuts nonoverlapping runs of whole sentences into three length groups. I first used Beowulf, but replaced it with Pride and Prejudice before any detector scores existed, because Beowulf is a verse translation with line numbers mixed into the text and the project asks for prose.
 
 | Set | Books (source documents) | Unmarked (30–99 / 100–199 / 200–400 words) | Watermarking |
 |---|---|---|---|
