@@ -1,5 +1,5 @@
 # KeyedTextWaterMarking-Project
-Text watermarking embeds a detectable signal in text. In a keyed scheme, the signal depends on a secret key. A detector reports a match to that signal. Authorship and policy violations require separate evidence. The full method and results are in `Milestone1_Report.docx`.
+Text watermarking embeds a detectable signal in text. In a keyed scheme, the signal depends on a secret key. A detector reports a match to that signal. Authorship and policy violations require separate evidence. The full method and results are in `Milestone1_Report.docx`. All was done assuming the attacker does not have access to the key.
 
 [Github Repo](https://github.com/Joshypan/KeyedTextWaterMarking-Project)
 
@@ -27,7 +27,7 @@ Each passage's book, set, length group, total and distinct word counts, and forg
 # Commands
 Run commands from the project folder.
 
-**One-time steps:** `key.py`, `evaluate.py fix` and `evaluate.py evaluate` refuse to run again once `keys/key.hex`, `results/settings.json` or `results/evaluation/` exists. The saved results depend on the original key, which is not in this repo (`keys/` is git-ignored), so a new key will not reproduce them.
+**One-time steps:** `key.py`, `evaluate.py fix` and `evaluate.py evaluate` refuse to run again once `keys/key.hex`, `results/settings.json` or `results/evaluation/` exists. The saved results depend on the original key, so a new key will not reproduce them.
 
 ### 1. Run the tests
 ```bash
@@ -35,7 +35,6 @@ python3 -m unittest discover -s tests -v
 ```
 
 ### 2. Prepare the passages
-Download the books into `data/books/` first (see [Data sources](#data-sources)).
 ```bash
 python3 prepare_text.py
 ```
