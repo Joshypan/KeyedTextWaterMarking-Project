@@ -1,6 +1,8 @@
 # KeyedTextWaterMarking-Project
 Text watermarking embeds a detectable signal in text. In a keyed scheme, the signal depends on a secret key. A detector reports a match to that signal. Authorship and policy violations require separate evidence. The full method and results are in `report.md`.
 
+[Github Repo](https://github.com/Joshypan/KeyedTextWaterMarking-Project)
+
 ## Data sources
 
 All 315 passages were extracted from 8 source documents from [Project Gutenberg](https://www.gutenberg.org), a library of free ebooks. Project Gutenberg follows US copyright law, and these titles are public domain in the US. Plain-text (UTF-8) files were used. `prepare_text.py` strips the Gutenberg header and footer, footnotes and footnote numbers, transcriber's notes, headings and all-caps lines. The book files themselves are not committed (`data/books/` is git-ignored); download them from the links below.
