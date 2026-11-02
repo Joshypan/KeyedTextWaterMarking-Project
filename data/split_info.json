@@ -10,7 +10,7 @@
     "sherlock": "evaluation"
   },
   "book_to_set_method": "files shuffled with random.Random(20261009), alternating calibration/evaluation",
-  "forgery_selection_method": "random.Random(7).sample(sorted evaluation watermark ids, 5), run at data-prep time before any detector score existed",
+  "forgery_selection_method": "random.Random(7).sample(sorted evaluation watermark ids, 5), run at data prep time",
   "forgery_selected": [
     "eva_wm_01",
     "eva_wm_03",

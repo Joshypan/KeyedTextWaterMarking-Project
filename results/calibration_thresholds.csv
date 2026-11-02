@@ -1,5 +1,5 @@
-threshold,flagged_unmarked,unmarked_tested,unflagged_outputs,outputs_tested,flagged_30-99,flagged_100-199,flagged_200-400
-0.55,1,150,0,5,1,0,0
-0.60,0,150,0,5,0,0,0
-0.65,0,150,0,5,0,0,0
-0.70,0,150,0,5,0,0,0
+threshold,flagged_unmarked,unmarked_tested,unflagged_outputs,outputs_tested
+0.55,1,150,0,5
+0.60,0,150,0,5
+0.65,0,150,0,5
+0.70,0,150,0,5
