@@ -1,5 +1,5 @@
 # KeyedTextWaterMarking-Project
-Text watermarking embeds a detectable signal in text. In a keyed scheme, the signal depends on a secret key. A detector reports a match to that signal. Authorship and policy violations require separate evidence. The full method and results are in `report.md`.
+Text watermarking embeds a detectable signal in text. In a keyed scheme, the signal depends on a secret key. A detector reports a match to that signal. Authorship and policy violations require separate evidence. The full method and results are in `report.docx`.
 
 [Github Repo](https://github.com/Joshypan/KeyedTextWaterMarking-Project)
 
@@ -74,7 +74,7 @@ Scores the evaluation set with the frozen settings and reports the false-positiv
 # Owner
 Joshua Panchana Cedeno
 
-During this first milestone, my main issue stemmed from being able to find passages. I was able to solve this issue using [gutenberg.org](https://www.gutenberg.org) and downloading .txt files of the books, parsing the files to create the passages I need and mark them. I was able to implement an organized way of breaking down the txt files into passages and storing their watermarked versions. The watermarked versions are in the `data/watermarked` directory, the quality reviews are in the `review` directory, and the calibration and evaluation results are in the `results` directory. Read the report for more information on the flow of watermarking and the final evaluation in `report.md`.
+During this first milestone, my main issue stemmed from being able to find passages. I was able to solve this issue using [gutenberg.org](https://www.gutenberg.org) and downloading .txt files of the books, parsing the files to create the passages I need and mark them. I was able to implement an organized way of breaking down the txt files into passages and storing their watermarked versions. The watermarked versions are in the `data/watermarked` directory, the quality reviews are in the `review` directory, and the calibration and evaluation results are in the `results` directory. Read the report for more information on the flow of watermarking and the final evaluation in `report.docx`.
 
 Contributions - Claude
 
